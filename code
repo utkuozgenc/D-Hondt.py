@@ -1,0 +1,111 @@
+parties=input("Enter political party names: ").split(",")
+ratios=input("Enter vote ratios across country: ").split(",")
+alliances=input("Enter alliance information: ").split(",")
+votes_to_be_counted=[]
+alliance_sums=[]
+  
+for x in alliances:
+  parties_of_an_alliance=x.split("-")
+  ratio_sum=0
+  for i in parties_of_an_alliance:
+    if i in parties:
+      idx=parties.index(i)
+      ratio_sum += float(ratios[idx])
+      ratio_sum=float(ratio_sum)
+  alliance_sums.append((x,ratio_sum))
+
+ratios_as_floats=[]
+for x in ratios:
+    ratios_floats=float(x)
+    if len(ratios_as_floats) < len(parties):
+      ratios_as_floats.append(ratios_floats)
+
+under_barrage_without_a_alliance=[]
+for i in parties:
+    idx=parties.index(i)
+    if idx < len(ratios_as_floats) and ratios_as_floats[idx] >= 7.0:
+          votes_to_be_counted.append(i)
+    else:
+          under_barrage_without_a_alliance.append(i)
+        
+for x in under_barrage_without_a_alliance:
+    for a in alliance_sums:
+      if x in a[0] and a[1]>=7:
+        votes_to_be_counted.append(x)
+
+
+
+districts_of_the_country=int(input("Please enter the number of districts that the country is having: "))
+while districts_of_the_country != 0:
+
+  print()
+  votes=input("Enter the vote numbers in the district: ").split(",")
+  representitives=int(input("Enter the number of representatives in the district: "))
+  jointList=input("Enter joint list information: ").split(",")
+
+
+  votes_as_int=[]
+  for x in votes:
+    votes_int=int(x)
+    votes_as_int.append(votes_int)
+
+
+  joints=[]
+  for a in jointList:
+    parties_that_their_votes_to_be_combined=a.split("->")
+    vote_sum=0
+    for y in parties_that_their_votes_to_be_combined:
+      idx=parties.index(y)
+      vote_sum += int(votes_as_int[idx])
+      vote_sum=int(vote_sum) 
+    joints.append((a,vote_sum))
+
+
+  #rearranging the votes_as_int list according to joint list 
+
+  for x in joints:
+        who_supports_who1=x[0].find("-")
+        who_supports_who2=x[0].find(">")
+        supporter=x[0][:who_supports_who1]
+        gatherer=x[0][who_supports_who2+1:]
+        if supporter in votes_to_be_counted and gatherer in votes_to_be_counted:
+          index_of_supporter=parties.index(supporter)
+          index_of_gatherer=parties.index(gatherer)
+          votes_as_int[index_of_gatherer]+=votes_as_int[index_of_supporter]
+          votes_as_int[index_of_supporter]=0
+
+  #rearranging the votes_as_int list according to parties which are under barrage with or without a party. Setting their vote number as zero.
+
+  for x in parties:
+        idx=parties.index(x)
+        if x not in votes_to_be_counted:
+          votes_as_int[idx]=0
+
+
+
+  allocation = [0] * len(votes_as_int)
+
+  for a in range(representitives):
+      max_rate = 0
+      max_index = 0
+      for b in range(len(votes_as_int)):
+        rate = votes_as_int[b] / (allocation[b] + 1)
+        if rate > max_rate:
+          max_rate = rate
+          max_index = b
+      allocation[max_index] += 1
+
+  print()  
+  print("Representative count for the spesific district is: ")
+  print()
+  for x in range(len(parties)):
+    while allocation[x]!=0:
+        print(parties[x],"->",allocation[x],"representative(s).")
+        break
+
+  districts_of_the_country-=1
+
+
+
+    
+        
