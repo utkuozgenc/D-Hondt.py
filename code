@@ -36,7 +36,7 @@ for x in under_barrage_without_a_alliance:
 
 
 districts_of_the_country=int(input("Please enter the number of districts that the country is having: "))
-while districts_of_the_country != 0:
+while districts_of_the_country != 0 or votes.upper()!="EXIT":
 
   print()
   votes=input("Enter the vote numbers in the district: ").split(",")
